@@ -17,6 +17,10 @@ const playerPosition = {
     x: undefined,
     y: undefined,
 };
+const playerPositionFinish = {
+    x: undefined,
+    y: undefined,
+}
 
 const giftPosition = {
     x: undefined,
@@ -28,7 +32,7 @@ let level = 0;
 let lives = 3;
 
 let timeStart;
-let timePlayer;
+let player_time;
 let timeInterval;
 
 
@@ -123,16 +127,25 @@ function setCanvasSize(){
    
 
     if (window.innerHeight > window.innerWidth){
-        canvasSize = window.innerWidth * 0.80;
+        canvasSize = window.innerWidth * 0.70;
     } else {
-        canvasSize = window.innerHeight * 0.80;
+        canvasSize = window.innerHeight * 0.70;
     }
+    canvasSize = Number(canvasSize.toFixed(0));
 
     canvas.setAttribute("width",canvasSize);
     canvas.setAttribute("height",canvasSize);
 
     elementSize = (canvasSize / 10);
-    startGame()
+
+    // playerPosition.x = (playerPosition.x * elementSize);
+    // playerPosition.y = (playerPosition.y * elementSize);
+    // console.log(playerPosition.x,playerPosition.y,elementSize)
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+
+    startGame();
 }
 
 window.addEventListener("keyup",(element) => {
@@ -202,9 +215,21 @@ function gameWin(){
     console.log("you finsh");
 
     const record_time = localStorage.getItem("record_time");
-    timePlayer = Date.now() - timeStart;
-    
-    setRecordTime(record_time);
+    player_time = Date.now() - timeStart;
+
+
+    if (record_time) {
+        // debugger
+        if (record_time >= player_time) {
+          localStorage.setItem('record_time', player_time);
+          showResult("Congradulations you set a new record!");
+        } else {
+            showResult("Sorry");
+        }
+      } else {
+        localStorage.setItem('record_time', player_time);
+        showResult("Primera vez? Muy bien, pero ahora trata de superar tu tiempo :)");
+      }
     clearInterval(timeInterval);
 
 }
@@ -232,16 +257,3 @@ function showResult(message){
     
 }
 
-function setRecordTime(record_time){
-    if(record_time){
-        if(record_time > timePlayer){
-            localStorage.setItem("record_time", timePlayer);
-            showResult("Congradulations you set a new record!")
-        } else {
-            showResult("Sorry buddy you need to practice more =(")
-        }
-    } else {
-        localStorage.setItem("record_time", timePlayer);
-        showResult("Congradulations your first time playing!")
-    }
-}

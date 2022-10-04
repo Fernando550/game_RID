@@ -5,22 +5,27 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="./styles.css">
-<title>Platzriv - Jueguito online de carreras y calaveras</title>
+<title>GameBoom</title>
 </head>
 <body>
 <div class="game-container">
 <canvas id="game"></canvas>
 <div class="btns">
-<button id="up" >Arriba</button>
-<button id="left">Izquierda</button>
-<button id="right">Derecha</button>
-<button id="down">Abajo</button>
-</div>
+<button id="up" >Up</button>
+<button id="left">Left</button>
+<button id="right">Right</button>
+<button id="down">Down</button>
+</div class="">
 <div class="messages">
-    <p>Vidas: <span id="lives"></span></p>
-    <p>Time: <span id="timer"></span></p>
+    <p>Lifes: <span id="lives"></span></p>
+    <p>Time: ⏰<span id="timer"></span></p>
     <p>Record: 🏁<span id="record"></span></p>
-    <p id="result"></p>
+    <!-- <p id="result"></p> -->
+</div>
+<div id="restart-container" class="restart-container hide">
+    <h3 id="result"></h3>
+    <!-- <p id="result"></p> -->
+    <button id="restart" class="restart-button">Restart</button>
 </div>
 </div>
 <script src="./maps.js"></script>

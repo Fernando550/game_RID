@@ -8,6 +8,8 @@ const spanLives = document.querySelector("#lives");
 const spanTime = document.querySelector("#timer");
 const spanRecord = document.querySelector("#record");
 const pResults = document.querySelector("#result");
+const restartSing = document.querySelector("#restart-container");
+const restartButton = document.querySelector("#restart");
 
 
 let canvasSize;
@@ -26,6 +28,10 @@ const giftPosition = {
     x: undefined,
     y: undefined,
 };
+const explotionPosition = {
+    x: undefined,
+    y: undefined,
+}
 
 let obstacles = [];
 let level = 0;
@@ -48,10 +54,12 @@ function startGame() {
     game.padding = "10px";
     
 
-    const mapString = maps[level];
+    let mapString = maps[level];
 
     if (!mapString) {
         gameWin();
+        showRestartSing();
+        level = level - 1;
         return;
     }
 
@@ -71,7 +79,7 @@ function startGame() {
 
     mapArray.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
-            const emoji = emojis[col];
+            let emoji = emojis[col];
             const positionX = (colIndex + 1) * elementSize + 10;
             const positionY = (rowIndex + 1) * elementSize - 10;
 
@@ -90,9 +98,16 @@ function startGame() {
                         y:positionY
                     })
                 }
+                // if (explotionPosition.x && explotionPosition.y){
+                //     game.fillText(emojis["BOMB_COLLISION"], explotionPosition.x, explotionPosition.y);
+                //     explotionPosition.x = undefined;
+                //     explotionPosition.y = undefined;
+                // } else {
+                //     game.fillText(emoji, positionX,positionY);
+                // }
             
 
-            game.fillText(emoji, positionX,positionY);
+                game.fillText(emoji, positionX,positionY);
         })
     })
 
@@ -106,21 +121,26 @@ function movePlyer(){
     const giftColition =  giftColitionX && giftColitionY;
 
     if (giftColition) {
-        console.log("You winn!");
         levelWin();
     }
 
     const enemyColition = obstacles.find(enemy => {
-        const enemyColitionx = enemy.x.toFixed(3) == playerPosition.x.toFixed(3) ;
-        const enemyColitiony = enemy.y.toFixed(3)  == playerPosition.y.toFixed(3) ;
+        const enemyColitionx = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+        const enemyColitiony = enemy.y.toFixed(3)  == playerPosition.y.toFixed(3);
+        if ( enemyColitionx && enemyColitiony) {
+            game.fillText(emojis["BOMB_COLLISION"], enemy.x, enemy.y);
+        }
         return enemyColitionx && enemyColitiony;
     })
 
     if (enemyColition) {
-        restartLevel();
+
+        setTimeout(restartLevel, 1000);
+    } else {
+        game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
     }
 
-    game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
+    
 }
 
 function setCanvasSize(){
@@ -145,6 +165,7 @@ function setCanvasSize(){
     playerPosition.x = undefined;
     playerPosition.y = undefined;
 
+
     startGame();
 }
 
@@ -159,10 +180,10 @@ buttonUp.addEventListener("click", moveUp);
 buttonDown.addEventListener("click", moveDown);
 buttonRight.addEventListener("click", moveRight);
 buttonLeft.addEventListener("click", moveLeft);
+restartButton.addEventListener("click", restartGame);
 
 
 function moveUp() {
-    console.log("moveUp");
     playerPosition.y -= elementSize;
     if (playerPosition.y < 0) {
         playerPosition.y += elementSize;
@@ -170,7 +191,6 @@ function moveUp() {
     startGame();
 }
 function moveDown(){
-    console.log("moveDown");
     playerPosition.y += elementSize;
     if (playerPosition.y > elementSize * 10) {
         playerPosition.y -= elementSize;
@@ -179,7 +199,6 @@ function moveDown(){
 
 }
 function moveRight(){
-    console.log("moveRight");
     playerPosition.x += elementSize;
     if (playerPosition.x > elementSize * 11) {
         playerPosition.x -= elementSize;
@@ -187,7 +206,6 @@ function moveRight(){
     startGame();
 }
 function moveLeft() {
-    console.log("moveLeft");
     playerPosition.x -= elementSize;
     if (playerPosition.x <= elementSize) {
         playerPosition.x += elementSize;
@@ -228,7 +246,7 @@ function gameWin(){
         }
       } else {
         localStorage.setItem('record_time', player_time);
-        showResult("Primera vez? Muy bien, pero ahora trata de superar tu tiempo :)");
+        showResult("It's your first time playing, now set a new record!");
       }
     clearInterval(timeInterval);
 
@@ -257,3 +275,9 @@ function showResult(message){
     
 }
 
+function showRestartSing(){
+    restartSing.classList.remove("hide");
+}
+function restartGame(){
+    location.reload();
+}

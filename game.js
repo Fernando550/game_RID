@@ -98,15 +98,6 @@ function startGame() {
                         y:positionY
                     })
                 }
-                // if (explotionPosition.x && explotionPosition.y){
-                //     game.fillText(emojis["BOMB_COLLISION"], explotionPosition.x, explotionPosition.y);
-                //     explotionPosition.x = undefined;
-                //     explotionPosition.y = undefined;
-                // } else {
-                //     game.fillText(emoji, positionX,positionY);
-                // }
-            
-
                 game.fillText(emoji, positionX,positionY);
         })
     })
@@ -134,13 +125,12 @@ function movePlyer(){
     })
 
     if (enemyColition) {
-
+        playerPosition.x = undefined;
+        playerPosition.y = undefined;
         setTimeout(restartLevel, 1000);
     } else {
         game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
     }
-
-    
 }
 
 function setCanvasSize(){
@@ -230,7 +220,7 @@ function restartLevel(){
 }
 
 function gameWin(){
-    console.log("you finsh");
+    clearInterval(timeInterval);
 
     const record_time = localStorage.getItem("record_time");
     player_time = Date.now() - timeStart;
@@ -248,7 +238,7 @@ function gameWin(){
         localStorage.setItem('record_time', player_time);
         showResult("It's your first time playing, now set a new record!");
       }
-    clearInterval(timeInterval);
+    
 
 }
 
